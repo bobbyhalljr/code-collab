@@ -1,59 +1,52 @@
-// components/live-coding/ChatRoom.tsx
-import React, { useEffect, useState } from 'react';
-import { supabase } from '../../utils/supabase';
-import Button from '../common/Button';
+// components/liveCoding/ChatRoom.tsx
+import React, { useState } from 'react';
+import ChatBubble from './ChatBubble';
+import UserAvatar from './UserAvater';
 
-const ChatRoom: React.FC = () => {
-  const [messages, setMessages] = useState<string[]>([]);
+interface ChatRoomProps {
+  userName: string;
+}
+
+const ChatRoom: React.FC<ChatRoomProps> = ({ userName }) => {
+  const [messages, setMessages] = useState<{ user: string; message: string }[]>([]);
   const [newMessage, setNewMessage] = useState('');
 
-  useEffect(() => {
-    // Subscribe to changes in the 'chat' table for real-time updates
-    const chatSubscription = supabase
-      .channel('chat')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'todos' }, (payload) => {
-        setMessages((prevMessages) => [...prevMessages, payload.new.message]);
-      })
-      .subscribe();
-
-    // Cleanup subscription on component unmount
-    return () => {
-      chatSubscription.unsubscribe();
-    };
-  }, []);
-
   const handleSendMessage = () => {
-    // Insert a new message into the 'chat' table
-    supabase.from('chat').upsert([{ message: newMessage }]);
-    setNewMessage('');
+    if (newMessage.trim() !== '') {
+      setMessages([...messages, { user: userName, message: newMessage }]);
+      setNewMessage('');
+    }
   };
 
   return (
-    <div className="flex-none lg:w-1/3 bg-black text-white h-1/2 lg:h-screen overflow-y-scroll px-2 pb-12">
-      <div className="h-full flex flex-col justify-between">
-        {/* Chat Messages */}
-        <div className="overflow-y-auto">
-          {messages.map((message, index) => (
-            <div key={index} className="mb-2">
-              <span className="text-gray-500">User:</span> {message}
-            </div>
-          ))}
-        </div>
-
-        {/* Chat Input */}
-        <div>
-          <input
-            type="text"
-            placeholder="Type your message..."
-            className="w-full border text-gray-700 font-medium tracking-wide rounded-lg border-gray-700 p-2"
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
+    <div className="border w-full p-4 fixed bottom-0 left-0 mx-w-md bg-gray-100 rounded-md">
+      <div className="">
+        {messages.map((msg, index) => (
+          <ChatBubble
+            key={index}
+            timestamp={`${Date.now()}`}
+            userName={msg.user}
+            message={msg.message}
+            isCurrentUser={msg.user === userName}
           />
-          {/* <button className="bg-blue-500 rounded-lg w-full text-white p-3 mt-2" onClick={handleSendMessage}>
-            Send message
-          </button> */}
-          <Button onClick={() => {}}>Send message</Button>
-        </div>
+        ))}
+      </div>
+      <div className="mt-4 flex">
+        <input
+          type="text"
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          className="flex-grow border p-2 rounded-md mr-2"
+          placeholder="Type your message..."
+        />
+        <button onClick={handleSendMessage} className="bg-blue-500 text-white p-2 flex rounded-md">
+          Send
+        </button>
+      </div>
+      <div className="mt-2 flex items-center">
+        <span className="mr-2">Participants:</span>
+        <UserAvatar userName={userName} />
+        {/* Add more user avatars for other participants */}
       </div>
     </div>
   );

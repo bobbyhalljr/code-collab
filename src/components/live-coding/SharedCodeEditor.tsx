@@ -27,7 +27,7 @@ const SharedCodeEditor: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 w-full lg:h-screen h-1/2 bg-gray-900 text-white p-4 overflow-y-scroll">
+    <div className="flex-1 w-full lg:h-screen h-1/2 bg-gray-950 text-white p-4 overflow-y-scroll">
       {/* Shared Code Editor Component */}
       <CodeEditor />
     </div>

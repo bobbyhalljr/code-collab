@@ -10,7 +10,7 @@ const LiveCodingSession: React.FC = () => {
       <SharedCodeEditor />
 
       {/* Chat Room */}
-      <ChatRoom />
+      <ChatRoom userName='Bobbyhalljr' />
     </div>
   );
 };

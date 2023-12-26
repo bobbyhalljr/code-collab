@@ -69,6 +69,9 @@ const Navbar: React.FC = () => {
           <Link href="/dashboard" className="text-white hover:text-gray-300">
             Dashboard
           </Link>
+          <Link href="/challenges" className="text-white hover:text-gray-300">
+            Challenges
+          </Link>
           <Link href="/live" className="text-white hover:text-gray-300">
             Live Session
           </Link>
@@ -103,6 +106,11 @@ const Navbar: React.FC = () => {
             <li>
               <Link href="/dashboard" className="text-white hover:text-gray-400">
                 Dashboard
+              </Link>
+            </li>
+            <li>
+              <Link href="/challenges" className="text-white hover:text-gray-400">
+                Challenges
               </Link>
             </li>
             <li>
