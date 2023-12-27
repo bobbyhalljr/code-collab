@@ -21,7 +21,7 @@ const ChallengeSolve: React.FC<ChallengeSolveProps> = ({ category, challengeId, 
       await submitChallengeSolution(category, challengeId, { solution });
 
       // Redirect to the Submit Result page
-      router.push(`/challenges/${category}/${challengeId}/submit-result`);
+      router.push(`/challenges/${category.toLowerCase()}/${challengeId}/submit-solution`);
     } catch (error) {
       // Handle error scenarios, such as displaying an error message to the user
       console.error('Error submitting challenge solution:', error);
